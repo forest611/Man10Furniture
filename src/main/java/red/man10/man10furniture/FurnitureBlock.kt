@@ -90,7 +90,7 @@ object FurnitureBlock : Listener {
         fixedLoc.x += 0.5
         fixedLoc.z += 0.5
 
-        val entities = location.world.getNearbyEntities(fixedLoc,1.0,1.0,1.0)
+        val entities = location.world.getNearbyEntities(fixedLoc,0.5,0.5,0.5)
 
         for (entity in entities){
             if (entity.type != EntityType.ARMOR_STAND)continue
@@ -148,6 +148,8 @@ object FurnitureBlock : Listener {
                 breakFurniture(loc)
 
                 p.sendMessage("§a家具を撤去した！")
+
+                p.inventory.addItem(stand.getItem(EquipmentSlot.HEAD))
 
             }
 
