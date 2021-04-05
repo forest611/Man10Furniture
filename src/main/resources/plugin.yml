@@ -2,6 +2,8 @@ name: Man10Furniture
 version: 1.0
 main: red.man10.man10furniture.Man10Furniture
 api-version: 1.16
+depend:
+  - Man10RealEstate
 commands:
   furniture:
     default: op

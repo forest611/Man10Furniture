@@ -12,6 +12,8 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import red.man10.realestate.RealEstateAPI
+import red.man10.realestate.region.User
 
 object FurnitureBlock : Listener {
 
@@ -21,7 +23,6 @@ object FurnitureBlock : Listener {
         center.block.type = Material.BARRIER
 
         val loc = center.clone()
-
         var yaw: Float = loc.yaw
 
         if (yaw < 0) {
@@ -45,7 +46,7 @@ object FurnitureBlock : Listener {
         armor.setGravity(false)
         armor.canPickupItems = false
         armor.isVisible = false
-        armor.setItem(EquipmentSlot.HEAD,item.clone())
+        armor.setItem(EquipmentSlot.HEAD,item.clone().asOne())
 
         item.amount = item.amount - 1
 
@@ -102,13 +103,19 @@ object FurnitureBlock : Listener {
 
     }
 
-    @EventHandler( ignoreCancelled = false)
+    @EventHandler
     fun interactEvent(e:PlayerInteractEvent){
 
-        val item = e.item?:return
-        val p = e.player
+        if (e.action != Action.RIGHT_CLICK_BLOCK && e.action!=Action.LEFT_CLICK_BLOCK)return
 
         if (e.hand != EquipmentSlot.HAND)return
+
+        val p = e.player
+        val loc = e.clickedBlock!!.location
+        val item = e.item?:return
+
+        if (!RealEstateAPI.hasPermission(p,loc,User.Permission.BLOCK))return
+
 
         when(e.action){
             Action.RIGHT_CLICK_BLOCK->{
@@ -119,14 +126,12 @@ object FurnitureBlock : Listener {
 
                 e.isCancelled = true
 
-                val location = e.clickedBlock!!.location
-
-                if (!canSetFurniture(location)){
+                if (!canSetFurniture(loc)){
                     p.sendMessage("§cこの場所にはもう家具は置けない！")
                     return
                 }
 
-                val furnitureLocation = location.clone()
+                val furnitureLocation = loc.clone()
 
 
                 furnitureLocation.yaw = p.location.yaw
@@ -137,7 +142,7 @@ object FurnitureBlock : Listener {
 
             Action.LEFT_CLICK_BLOCK->{
 
-                val loc = e.clickedBlock!!.location
+
 
                 val stand = getArmorStand(loc)?:return
 

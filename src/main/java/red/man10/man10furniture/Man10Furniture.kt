@@ -9,7 +9,7 @@ class Man10Furniture : JavaPlugin() {
 
     companion object{
         lateinit var plugin : Man10Furniture
-        const val maxFurniture = 16
+        const val maxFurniture = 8
     }
 
     override fun onEnable() {
