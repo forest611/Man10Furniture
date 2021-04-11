@@ -91,7 +91,7 @@ object FurnitureBlock : Listener {
         fixedLoc.x += 0.5
         fixedLoc.z += 0.5
 
-        val entities = location.world.getNearbyEntities(fixedLoc,0.5,0.5,0.5)
+        val entities = location.world.getNearbyEntities(fixedLoc,0.7,0.7,0.7)
 
         for (entity in entities){
             if (entity.type != EntityType.ARMOR_STAND)continue
