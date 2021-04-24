@@ -1,5 +1,6 @@
 package red.man10.man10furniture
 
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -7,13 +8,12 @@ import org.bukkit.block.BlockFace
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
-import red.man10.realestate.RealEstateAPI
-import red.man10.realestate.region.User
 
 object FurnitureBlock : Listener {
 
@@ -91,11 +91,12 @@ object FurnitureBlock : Listener {
         fixedLoc.x += 0.5
         fixedLoc.z += 0.5
 
-        val entities = location.world.getNearbyEntities(fixedLoc,0.7,0.7,0.7)
+        val entities = location.world.getNearbyEntities(fixedLoc,0.1,0.1,0.1)
 
         for (entity in entities){
             if (entity.type != EntityType.ARMOR_STAND)continue
             if (entity !is ArmorStand)continue
+            if (!FurnitureItem.isFurnitureItem(entity.getItem(EquipmentSlot.HEAD)))continue
             return entity
         }
 
@@ -103,7 +104,7 @@ object FurnitureBlock : Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST,ignoreCancelled = false)
     fun interactEvent(e:PlayerInteractEvent){
 
         if (e.action != Action.RIGHT_CLICK_BLOCK && e.action!=Action.LEFT_CLICK_BLOCK)return
@@ -112,15 +113,15 @@ object FurnitureBlock : Listener {
 
         val p = e.player
         val loc = e.clickedBlock!!.location
-        val item = e.item?:return
+        val item = e.item
 
-        if (!RealEstateAPI.hasPermission(p,loc,User.Permission.BLOCK))return
-
+        if (e.isCancelled)return
 
         when(e.action){
             Action.RIGHT_CLICK_BLOCK->{
 
                 if (e.blockFace != BlockFace.UP)return
+                if (e.clickedBlock!!.type == Material.BARRIER)return
 
                 if (!FurnitureItem.isFurnitureItem(item))return
 
@@ -133,11 +134,10 @@ object FurnitureBlock : Listener {
 
                 val furnitureLocation = loc.clone()
 
-
                 furnitureLocation.yaw = p.location.yaw
                 furnitureLocation.y += 1.0
 
-                setFurniture(furnitureLocation,item)
+                setFurniture(furnitureLocation,item?:return)
             }
 
             Action.LEFT_CLICK_BLOCK->{

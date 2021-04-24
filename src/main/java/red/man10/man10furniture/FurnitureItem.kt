@@ -17,7 +17,10 @@ object FurnitureItem {
         return item
     }
 
-    fun isFurnitureItem(item:ItemStack):Boolean{
+    fun isFurnitureItem(item:ItemStack?):Boolean{
+
+        if (item ==null || !item.hasItemMeta())return false
+
         return item.itemMeta.persistentDataContainer[NamespacedKey(Man10Furniture.plugin,"furniture"),
                 PersistentDataType.STRING]?:"" == name
     }
