@@ -4,6 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
@@ -11,9 +12,12 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import red.man10.man10furniture.Man10Furniture.Companion.plugin
 
 object FurnitureBlock : Listener {
 
@@ -104,7 +108,7 @@ object FurnitureBlock : Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST,ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun interactEvent(e:PlayerInteractEvent){
 
         if (e.action != Action.RIGHT_CLICK_BLOCK && e.action!=Action.LEFT_CLICK_BLOCK)return
@@ -115,8 +119,6 @@ object FurnitureBlock : Listener {
         val loc = e.clickedBlock!!.location
         val item = e.item
 
-        if (e.isCancelled)return
-
         when(e.action){
             Action.RIGHT_CLICK_BLOCK->{
 
@@ -124,6 +126,8 @@ object FurnitureBlock : Listener {
                 if (e.clickedBlock!!.type == Material.BARRIER)return
 
                 if (!FurnitureItem.isFurnitureItem(item))return
+
+                if (e.isCancelled)return
 
                 e.isCancelled = true
 
@@ -142,11 +146,11 @@ object FurnitureBlock : Listener {
 
             Action.LEFT_CLICK_BLOCK->{
 
-
-
                 val stand = getArmorStand(loc)?:return
 
                 if (!FurnitureItem.isFurnitureItem(stand.getItem(EquipmentSlot.HEAD)))return
+
+                if (e.isCancelled)return
 
                 e.isCancelled = true
 
