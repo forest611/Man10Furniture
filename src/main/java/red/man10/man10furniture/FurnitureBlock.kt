@@ -117,11 +117,6 @@ object FurnitureBlock : Listener {
         when(e.action){
             Action.RIGHT_CLICK_BLOCK->{
 
-                if (e.blockFace != BlockFace.UP)return
-                if (e.clickedBlock!!.type == Material.BARRIER)return
-
-                if (!FurnitureItem.isFurnitureItem(item))return
-
                 if (e.isCancelled)return
 
                 e.isCancelled = true
@@ -138,6 +133,11 @@ object FurnitureBlock : Listener {
 
                     return
                 }
+
+                if (e.blockFace != BlockFace.UP)return
+                if (e.clickedBlock!!.type == Material.BARRIER)return
+
+                if (!FurnitureItem.isFurnitureItem(item))return
 
                 if (!canSetFurniture(loc)){
                     p.sendMessage("§cこの場所にはもう家具は置けない！")
