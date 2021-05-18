@@ -146,6 +146,8 @@ object FurnitureBlock : Listener {
 
             Action.LEFT_CLICK_BLOCK->{
 
+                if (!p.isSneaking)return
+
                 val stand = getArmorStand(loc)?:return
 
                 if (!FurnitureItem.isFurnitureItem(stand.getItem(EquipmentSlot.HEAD)))return
