@@ -1,10 +1,8 @@
 package red.man10.man10furniture
 
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
-import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
@@ -12,12 +10,9 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
-import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
-import red.man10.man10furniture.Man10Furniture.Companion.plugin
 
 object FurnitureBlock : Listener {
 
@@ -131,6 +126,19 @@ object FurnitureBlock : Listener {
 
                 e.isCancelled = true
 
+                val stand = getArmorStand(loc)
+
+                if (stand != null){
+
+                    val furniture = stand.getItem(EquipmentSlot.HEAD)
+
+                    if (!FurnitureItem.isFurnitureItem(furniture))return
+
+                    p.performCommand(FurnitureItem.getCommand(furniture))
+
+                    return
+                }
+
                 if (!canSetFurniture(loc)){
                     p.sendMessage("§cこの場所にはもう家具は置けない！")
                     return
@@ -138,7 +146,7 @@ object FurnitureBlock : Listener {
 
                 val furnitureLocation = loc.clone()
 
-                furnitureLocation.yaw = p.location.yaw
+                furnitureLocation.yaw = (p.location.yaw+360)%360-180
                 furnitureLocation.y += 1.0
 
                 setFurniture(furnitureLocation,item?:return)

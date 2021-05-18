@@ -39,6 +39,11 @@ class Man10Furniture : JavaPlugin() {
                 return true
             }
 
+            "command" ->{
+                FurnitureItem.setCommand(sender.inventory.itemInMainHand,args[1])
+                return true
+            }
+
         }
 
 
