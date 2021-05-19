@@ -117,13 +117,13 @@ object FurnitureBlock : Listener {
         when(e.action){
             Action.RIGHT_CLICK_BLOCK->{
 
-                if (e.isCancelled)return
-
-                e.isCancelled = true
-
                 val stand = getArmorStand(loc)
 
                 if (stand != null){
+
+                    if (e.isCancelled)return
+
+                    e.isCancelled = true
 
                     val furniture = stand.getItem(EquipmentSlot.HEAD)
 
@@ -138,6 +138,11 @@ object FurnitureBlock : Listener {
                 if (e.clickedBlock!!.type == Material.BARRIER)return
 
                 if (!FurnitureItem.isFurnitureItem(item))return
+
+                if (e.isCancelled)return
+
+                e.isCancelled = true
+
 
                 if (!canSetFurniture(loc)){
                     p.sendMessage("§cこの場所にはもう家具は置けない！")
