@@ -57,8 +57,6 @@ object FurnitureBlock : Listener {
 
         val stand = getArmorStand(location)?:return
 
-//        val item = stand.getItem(EquipmentSlot.HEAD)
-
         location.block.type = Material.AIR
 
         stand.remove()
@@ -89,8 +87,9 @@ object FurnitureBlock : Listener {
         val fixedLoc = location.clone()
         fixedLoc.x += 0.5
         fixedLoc.z += 0.5
+        fixedLoc.y += 1.0
 
-        val entities = location.world.getNearbyEntities(fixedLoc,0.1,0.1,0.1)
+        val entities = location.world.getNearbyEntities(fixedLoc,0.1,0.0,0.1)
 
         for (entity in entities){
             if (entity.type != EntityType.ARMOR_STAND)continue
@@ -163,7 +162,9 @@ object FurnitureBlock : Listener {
 
                 val stand = getArmorStand(loc)?:return
 
-                if (!FurnitureItem.isFurnitureItem(stand.getItem(EquipmentSlot.HEAD)))return
+                val furniture = stand.getItem(EquipmentSlot.HEAD)
+
+                if (!FurnitureItem.isFurnitureItem(furniture))return
 
                 if (e.isCancelled)return
 
@@ -173,7 +174,7 @@ object FurnitureBlock : Listener {
 
                 p.sendMessage("§a家具を撤去した！")
 
-                p.inventory.addItem(stand.getItem(EquipmentSlot.HEAD))
+                p.inventory.addItem(furniture)
 
             }
 
