@@ -128,7 +128,10 @@ object FurnitureBlock : Listener {
 
                     if (!FurnitureItem.isFurnitureItem(furniture))return
 
-                    p.performCommand(FurnitureItem.getCommand(furniture))
+                    val cmd = FurnitureItem.getCommand(furniture)
+                    if (cmd != ""){
+                        p.performCommand(cmd)
+                    }
 
                     return
                 }
